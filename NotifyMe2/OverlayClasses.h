@@ -443,6 +443,9 @@ LRESULT DXOverlay::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 
+	case WM_MOUSEMOVE:
+		MessageBeep(0xFFFFFFFF);
+		return 0;
 		// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
 	case WM_ENTERSIZEMOVE:
 		m_Resizing = true;
@@ -466,7 +469,6 @@ LRESULT DXOverlay::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		((MINMAXINFO*)lParam)->ptMinTrackSize.x = 200;
 		((MINMAXINFO*)lParam)->ptMinTrackSize.y = 200;
 		return 0;
-
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);

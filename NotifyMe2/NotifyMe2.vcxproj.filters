@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Calendar">
       <UniqueIdentifier>{64f8f87d-e9e2-40ef-aa2b-9874baf854a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GUI">
+      <UniqueIdentifier>{8460f4dc-826c-4e24-b365-978addf3cd15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="CalendarClasses.h">
       <Filter>Header Files\Calendar</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIFrameWork.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

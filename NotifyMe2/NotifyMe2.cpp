@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "OverlayClasses.h"
+#include "GUIFrameWork.h"
 #include "CalendarClasses.h"
 Calendar* calendar;
 
@@ -19,8 +20,8 @@ void D3DApp::DrawScene()
 
 	m_pImmediateDeviceContext->ClearRenderTargetView(m_pRenderTargetView, reinterpret_cast<const float*>(&clearColor));
 
-	calendar->DrawHeader(XMFLOAT2(50.0f,80.0f));
-	calendar->DrawGrid(6,7);
+	//calendar->DrawHeader(XMFLOAT2(50.0f,80.0f));
+	//calendar->DrawGrid(6,7);
 
 	/*XMVECTOR pos1 = { m_width / 2, m_height / 2 + 1 };
 	XMVECTOR pos2 = { m_width / 2, m_height / 2 - 1 };
@@ -42,6 +43,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	
 	DXOverlay* app=new D3DApp("Overlay", 600, 600, hInstance, "Untitled - Notepad", 4);
 	calendar =new Calendar(app);
+	GUIManager* GUIMngr = new GUIManager(app);
 	app->MakeWindow();
 	app->InitializeDX();
 	return app->RunOverlay(true);

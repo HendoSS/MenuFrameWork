@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CalendarClasses.h" />
+    <ClInclude Include="GUIFrameWork.h" />
     <ClInclude Include="NotifyMe2.h" />
     <ClInclude Include="OverlayClasses.h" />
     <ClInclude Include="Resource.h" />
