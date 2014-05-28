@@ -20,7 +20,7 @@ void D3DApp::DrawScene()
 
 	m_pImmediateDeviceContext->ClearRenderTargetView(m_pRenderTargetView, reinterpret_cast<const float*>(&clearColor));
 
-	//calendar->DrawHeader(XMFLOAT2(50.0f,80.0f));
+	calendar->DrawHeader(XMFLOAT2(50.0f,80.0f));
 	//calendar->DrawGrid(6,7);
 
 	/*XMVECTOR pos1 = { m_width / 2, m_height / 2 + 1 };
