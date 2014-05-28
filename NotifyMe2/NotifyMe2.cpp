@@ -6,6 +6,7 @@
 #include "GUIFrameWork.h"
 #include "CalendarClasses.h"
 Calendar* calendar;
+GUIManager* GUIMngr;
 
 void D3DApp::DrawScene()
 {
@@ -19,6 +20,10 @@ void D3DApp::DrawScene()
 	float blend[4] = { 0 };
 
 	m_pImmediateDeviceContext->ClearRenderTargetView(m_pRenderTargetView, reinterpret_cast<const float*>(&clearColor));
+
+	
+	GUIMngr->DrawElements();
+	GUIMngr->UpdateMouse();
 
 	calendar->DrawHeader(XMFLOAT2(50.0f,80.0f));
 	//calendar->DrawGrid(6,7);
@@ -43,7 +48,8 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	
 	DXOverlay* app=new D3DApp("Overlay", 600, 600, hInstance, "Untitled - Notepad", 4);
 	calendar =new Calendar(app);
-	GUIManager* GUIMngr = new GUIManager(app);
+	GUIMngr = new GUIManager(app);
+	GUIMngr->AddElement(new Button("Test",XMFLOAT2(150.0f, 150.f), XMFLOAT2(50.0f, 20.0f)));
 	app->MakeWindow();
 	app->InitializeDX();
 	return app->RunOverlay(true);
