@@ -15,7 +15,9 @@ public:
 	String m_Name;
 	virtual void Render(DXOverlay* appinst) = 0;
 	virtual bool IsMouseInBounds(XMFLOAT2 MousePos) = 0;
-	virtual void HandleClick()=0;
+	virtual void HandleMouseDown()=0;
+	virtual void HandleMouseUP() = 0;
+	bool m_ShouldHandleMouseUP;
 };
 GUIElement::GUIElement(){};
 
@@ -36,7 +38,8 @@ private:
 	HHOOK m_MouseHook;
 	std::vector<GUIElement*> GUIElements;
 	bool m_MouseisDown;
-	bool m_SendMouseClick;
+	bool m_SendMouseDown;
+	bool m_SendMouseUp;
 };
 /*Function for our MouseHook*/
 LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -50,7 +53,7 @@ GUIManager::GUIManager(DXOverlay* app) :appinstance(app)
 	GUIInst = this;
 	m_MouseHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, NULL, 0);
 	m_MouseisDown = false;
-	m_SendMouseClick = true;
+	m_SendMouseDown = true;
 };
 GUIManager::~GUIManager()
 {
@@ -87,11 +90,20 @@ void GUIManager::UpdateMouse()
 	}
 	for (GUIElement* Elem : GUIElements)
 	{
-		if (Elem->IsMouseInBounds(m_MousePosition) && m_MouseisDown && m_SendMouseClick)
+		if (Elem->IsMouseInBounds(m_MousePosition) && m_MouseisDown && m_SendMouseDown)
 		{
-			Elem->HandleClick();
-			m_SendMouseClick = false;
+			Elem->HandleMouseDown();
+			Elem->m_ShouldHandleMouseUP = true;
+			m_SendMouseDown = false;
 			//Only send one mousedown event to a button at a time
+		}
+		if (m_SendMouseUp && Elem->m_ShouldHandleMouseUP) 
+		{
+			/*shouldhandlemouse up is our way of knowing which element was clicked
+			we can't do a bounds check like mousedown because the cursor could have moved off of the 
+			element that was originally clicked*/
+			Elem->HandleMouseUP();
+			m_SendMouseUp = false;
 		}
 	}
 	appinstance->DrawString(XMFLOAT2(50.0f, 50.0f), 1.0f, false, "%f %f", m_MousePosition.x, m_MousePosition.y);
@@ -102,79 +114,18 @@ LRESULT GUIManager::MsgProc(int nCode, WPARAM wParam, LPARAM lParam)
 		if (wParam == WM_LBUTTONDOWN)
 		{
 			m_MouseisDown = true;
+			m_SendMouseDown = true;
 			printf("left mouse down\n");
 		}
 		if (wParam == WM_LBUTTONUP) 
 		{
 			m_MouseisDown = false;
-			m_SendMouseClick = true;
+			m_SendMouseUp = true; 
 			printf("left mouse up\n");
 		}
 	}
 	return CallNextHookEx(0, nCode, wParam, lParam);
 }
 
-
-class Button :public GUIElement
-{
-public:
-	typedef std::function<void()> CallbackFunc;
-	Button(String Text, XMFLOAT2 position, XMFLOAT2 Size, CallbackFunc callback);
-	bool IsMouseInBounds(XMFLOAT2 MousePos);
-	void Render(DXOverlay* appinst);
-	void ChangeText(String txt);
-	void HandleClick();
-private:
-	String m_Text;
-	CallbackFunc m_Callback;
-};
-Button::Button(String Text, XMFLOAT2 position, XMFLOAT2 Size, CallbackFunc callback) :m_Callback(std::move(callback))
-{
-	m_Position = position;
-	m_Bounds = Size;
-	m_Text = Text;
-}
-
-bool Button::IsMouseInBounds(XMFLOAT2 MousePos)
-{
-	//shows the 4 corners of button
-	//Pos__________Pos +X
-	//1             2
-	//
-	//3             4
-	//Pos__________Pos +X
-	//+Y				+Y
-	if (MousePos.x > m_Position.x &&
-		MousePos.y > m_Position.y &&
-		MousePos.x < (m_Position.x + m_Bounds.x) &&
-		MousePos.y < (m_Position.y + m_Bounds.y))
-	{
-		m_MouseIsOver = true;
-		return true;
-	}
-	m_MouseIsOver = false;
-	return false;
-}
-void Button::Render(DXOverlay* appinst)
-{
-	if (m_MouseIsOver)
-	{
-		XMVECTOR Pos1 = XMLoadFloat2(&m_Position);
-		XMVECTOR Pos2 = { m_Position.x + m_Bounds.x, m_Position.y };
-		XMVECTOR Pos3 = { m_Position.x, m_Position.y + m_Bounds.y };
-		XMVECTOR Pos4 = { m_Position.x + m_Bounds.x, m_Position.y + m_Bounds.y };
-		appinst->DrawLine(Pos1, Pos2, Colors::Black);
-		appinst->DrawLine(Pos1, Pos3, Colors::Black);
-		appinst->DrawLine(Pos2, Pos4, Colors::Black);
-		appinst->DrawLine(Pos3, Pos4, Colors::Black);
-	}
-		appinst->DrawString(XMFLOAT2(m_Position.x+(m_Bounds.x/2),m_Position.y+(m_Bounds.y/2)), 1.0f, true, "%s",m_Text.c_str());
-}
-void Button::ChangeText(String txt)
-{
-	m_Text = txt;
-}
-void Button::HandleClick()
-{
-	m_Callback();
-}
+#include "Button.h"
+#include "Slider.h"

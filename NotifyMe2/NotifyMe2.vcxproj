@@ -82,12 +82,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CalendarClasses.h" />
     <ClInclude Include="GUIFrameWork.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="NotifyMe2.h" />
     <ClInclude Include="OverlayClasses.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
