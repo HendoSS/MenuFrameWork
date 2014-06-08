@@ -103,6 +103,7 @@ void GUIManager::UpdateMouse()
 			we can't do a bounds check like mousedown because the cursor could have moved off of the 
 			element that was originally clicked*/
 			Elem->HandleMouseUP();
+			Elem->m_ShouldHandleMouseUP = false;
 			m_SendMouseUp = false;
 		}
 	}

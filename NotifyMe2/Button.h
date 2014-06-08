@@ -63,5 +63,5 @@ void Button::HandleMouseDown()
 }
 void Button::HandleMouseUP()
 {
-	m_ShouldHandleMouseUP = false;
+	
 }
