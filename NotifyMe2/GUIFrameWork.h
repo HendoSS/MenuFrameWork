@@ -23,6 +23,7 @@ class GUIManager
 {
 public:
 	GUIManager(DXOverlay* appinstance);
+	~GUIManager();
 	template<typename T> 
 	T* GetElement(int index);
 	int AddElement(GUIElement* Element);
@@ -51,6 +52,10 @@ GUIManager::GUIManager(DXOverlay* app) :appinstance(app)
 	m_MouseisDown = false;
 	m_SendMouseClick = true;
 };
+GUIManager::~GUIManager()
+{
+	UnhookWindowsHookEx(m_MouseHook);
+}
 /*Returns Element index so you can reference it later*/
 int GUIManager::AddElement(GUIElement* Element)
 {
