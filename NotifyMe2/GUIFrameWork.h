@@ -88,6 +88,7 @@ void GUIManager::UpdateMouse()
 	}else{
 		m_MousePosition = XMFLOAT2(0.0f, 0.0f);
 	}
+	
 	for (GUIElement* Elem : GUIElements)
 	{
 		if (Elem->IsMouseInBounds(m_MousePosition) && m_MouseisDown && m_SendMouseDown)
@@ -116,11 +117,13 @@ LRESULT GUIManager::MsgProc(int nCode, WPARAM wParam, LPARAM lParam)
 		{
 			m_MouseisDown = true;
 			m_SendMouseDown = true;
+			m_SendMouseUp = false;
 			printf("left mouse down\n");
 		}
 		if (wParam == WM_LBUTTONUP) 
 		{
 			m_MouseisDown = false;
+			m_SendMouseDown = false;
 			m_SendMouseUp = true; 
 			printf("left mouse up\n");
 		}
