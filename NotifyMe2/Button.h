@@ -42,16 +42,16 @@ void Button::Render(DXOverlay* appinst)
 {
 	if (m_MouseIsOver)
 	{
-		XMVECTOR Pos1 = XMLoadFloat2(&m_Position);
-		XMVECTOR Pos2 = { m_Position.x + m_Bounds.x, m_Position.y };
-		XMVECTOR Pos3 = { m_Position.x, m_Position.y + m_Bounds.y };
-		XMVECTOR Pos4 = { m_Position.x + m_Bounds.x, m_Position.y + m_Bounds.y };
+		XMVECTOR Pos1 = { m_Position.x, m_Position.y - (m_Bounds.y / 2) };
+		XMVECTOR Pos2 = { m_Position.x + m_Bounds.x, m_Position.y - (m_Bounds.y / 2) };
+		XMVECTOR Pos3 = { m_Position.x, m_Position.y + (m_Bounds.y / 2) };
+		XMVECTOR Pos4 = { m_Position.x + m_Bounds.x, m_Position.y + (m_Bounds.y / 2) };
 		appinst->DrawLine(Pos1, Pos2, Colors::Black);
 		appinst->DrawLine(Pos1, Pos3, Colors::Black);
 		appinst->DrawLine(Pos2, Pos4, Colors::Black);
 		appinst->DrawLine(Pos3, Pos4, Colors::Black);
 	}
-	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y + (m_Bounds.y / 2)), 1.0f, true, "%s", m_Text.c_str());
+	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y), 1.0f, true, "%s", m_Text.c_str());
 }
 void Button::ChangeText(String txt)
 {

@@ -28,11 +28,11 @@ void D3DApp::DrawScene() {
   calendar->DrawHeader(XMFLOAT2(50.0f, 80.0f));
   // calendar->DrawGrid(6,7);
 
-  /*XMVECTOR pos1 = { m_width / 2, m_height / 2 + 1 };
-	XMVECTOR pos2 = { m_width / 2, m_height / 2 - 1 };
-	DrawLine(pos1, pos2, Colors::Red);
+  /* XMVECTOR pos1 = { m_width / 2, m_height / 2 + 1 };
+ XMVECTOR pos2 = { m_width / 2, m_height / 2 - 1 };
+ DrawLine(pos1, pos2, Colors::Red);
 
-	DrawCircle(pos1, Colors::Green, 70, 30)*/;
+ DrawCircle(pos1, Colors::Green, 70, 30)*/
 
   HR(m_pSwapChain->Present(0, 0));
 }
@@ -65,6 +65,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 			std::cout << "Button 2 Pressed \n";
 		}));
 
+  GUIMngr->AddElement(
+	  new Slider<int>("Slider1", XMFLOAT2(500.0f, 400.0f), XMFLOAT2(50.0f, 20.0f), 0, 5, Colors::Black,
+		[]()->void
+		{
+			 std::cout << "Slider Released \n";
+		}));
  
   app->MakeWindow();
   app->InitializeDX();
