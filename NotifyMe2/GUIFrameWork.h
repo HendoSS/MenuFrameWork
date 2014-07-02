@@ -1,4 +1,4 @@
-
+#include "Panel.h"
 class GUIManager;
 namespace
 {
