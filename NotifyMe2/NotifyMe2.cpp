@@ -81,7 +81,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 			 std::cout << "Slider Released \n";
 		}));
 
- 
   pPanel->AddElement(
 	    new Button("Test 3", "Button 3", XMFLOAT2(50.0f, 50.0f), XMFLOAT2(50.0f, 20.0f),
 		[]()->void
