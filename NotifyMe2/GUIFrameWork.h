@@ -1,4 +1,7 @@
-#include "Panel.h"
+/*!!!!!!!!!!!! When adding elements to a panel coordinates are relative to the panel, when adding elements
+strait to the GUIManager w/o a panel they are relative to screen/game window !!!!!!!!!!!!!! */
+
+//^^^^^ READ THAT !!!!!!!!!
 class GUIManager;
 namespace
 {
@@ -17,6 +20,7 @@ public:
 	virtual bool IsMouseInBounds(XMFLOAT2 MousePos) = 0;
 	virtual void HandleMouseDown()=0;
 	virtual void HandleMouseUP() = 0;
+	virtual void SetPosition(XMFLOAT2 Pos) = 0;
 	bool m_ShouldHandleMouseUP;
 };
 GUIElement::GUIElement(){};
@@ -28,6 +32,8 @@ public:
 	~GUIManager();
 	template<typename T> 
 	T* GetElement(int index);
+	template<typename T>
+	T* GetElement(String name);
 	int AddElement(GUIElement* Element);
 	void DrawElements();
 	void UpdateMouse();
@@ -70,6 +76,18 @@ template<typename T>
 T* GUIManager::GetElement(int index)
 {
 	return dynamic_cast<T*>(GUIElements.at(index));
+}
+template<typename T>
+T* GUIManager::GetElement(String name)
+{
+	for (auto Elem : GUIElements)
+	{
+		if (Elem->m_Name == name)
+		{
+			return dynamic_cast<T*>(Elem); 
+		}
+	}
+	return nullptr;
 }
 void GUIManager::DrawElements()
 {
@@ -131,5 +149,6 @@ LRESULT GUIManager::MsgProc(int nCode, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(0, nCode, wParam, lParam);
 }
 
+#include "Panel.h"
 #include "Button.h"
 #include "Slider.h"

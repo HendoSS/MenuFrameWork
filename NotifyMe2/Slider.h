@@ -18,10 +18,11 @@ public:
 	void Render(DXOverlay* appinst);
 	void HandleMouseDown();
 	void HandleMouseUP();
+	T GetValue();
+	void SetPosition(XMFLOAT2 Pos);
 private:
 	CallbackFunc m_Callback;
 	T m_Min, m_Max;
-	String m_Text;
 	XMFLOAT2 m_SliderPosition;
 	XMVECTOR m_Color;
 	bool m_MouseIsDown;
@@ -30,7 +31,7 @@ private:
 template<typename T>
 Slider<T>::Slider(String Text, XMFLOAT2 position, XMFLOAT2 Size,T MinVal, T MaxVal,XMVECTOR Color, CallbackFunc callback) :m_Callback(std::move(callback))
 {
-	m_Text = Text;
+	m_Name = Text;
 	m_Position = position;
 	m_Bounds = Size;
 	m_Min = MinVal;
@@ -85,6 +86,9 @@ void Slider<T>::Render(DXOverlay* appinst)
 	if (typeid(T) == typeid(float))
 		identifier = "%f";
 
+	if (typeid(T) == typeid(double))
+		identifier = "%f";
+
 	//we print the min value, with -2 on the x just for formatting and then we draw the main slider bar
 	appinst->DrawString(XMFLOAT2(m_Position.x-5,m_Position.y), 1.0f, true, identifier.c_str(), m_Min);
 
@@ -118,4 +122,18 @@ void Slider<T>::HandleMouseUP()
 {
 	m_Callback();
 	m_MouseIsDown = false;
+}
+template<typename T>
+T Slider<T>::GetValue()
+{
+	return m_Value;
+}
+template<typename T>
+void Slider<T>::SetPosition(XMFLOAT2 Pos)
+{
+	/*We have to move the slider, the second line here keeps the slider at the same amount
+	away from the new X position as it was away from the old x position*/
+	m_SliderPosition.y = Pos.y;
+	m_SliderPosition.x = Pos.x + (m_Position.x - m_SliderPosition.x);
+	m_Position = Pos;
 }
