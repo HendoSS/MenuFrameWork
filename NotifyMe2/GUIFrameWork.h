@@ -149,6 +149,7 @@ LRESULT GUIManager::MsgProc(int nCode, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(0, nCode, wParam, lParam);
 }
 
-#include "Panel.h"
+
 #include "Button.h"
 #include "Slider.h"
+#include "Panel.h"

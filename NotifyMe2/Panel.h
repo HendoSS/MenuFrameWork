@@ -19,6 +19,12 @@ private:
 	bool m_PanelTopInBounds; //tells use actual panel is in bounds and not an element
 	int m_ElementOfEventIndex; //the index in array of SubElements that is handling the current mouse event
 };
+void Panel::AddElement(GUIElement* Element)
+{
+	/*Input Coordinates are relative to panel so we need to reconvert to screen space here*/
+	Element->SetPosition(XMFLOAT2(m_Position.x + Element->m_Position.x, m_Position.y + Element->m_Position.y));
+	SubElements.push_back(Element);
+}
 Panel::Panel(String Text,String Name, XMFLOAT2 Pos, XMFLOAT2 Size)
 {
 	m_Text = Text;
@@ -27,6 +33,13 @@ Panel::Panel(String Text,String Name, XMFLOAT2 Pos, XMFLOAT2 Size)
 	m_Bounds = Size;
 	m_Visible = true;
 	m_MouseIsDown = false;
+	String MinName = Name + " Minimize";
+	this->AddElement(new Button("-", MinName, XMFLOAT2(m_Bounds.x-40.0f, 2.0f), XMFLOAT2(20.0f, 20.0f),
+		[this]()->void
+		{
+			std::cout << "MinimizeTab Pressed \n";
+			this->ToogleVisibility();
+		}));
 }
 bool Panel::IsMouseInBounds(XMFLOAT2 MousePos)
 {
@@ -34,16 +47,7 @@ bool Panel::IsMouseInBounds(XMFLOAT2 MousePos)
 	this allows for the larger design choice of whether or not we want to use panels 
 	for certain elements; Due to the fact that events are handled per GUIElement and 
 	dispatched down the chain*/
-	if (MousePos.x > m_Position.x &&
-		MousePos.y > m_Position.y &&
-		MousePos.x < (m_Position.x + m_Bounds.x) &&
-		MousePos.y < (m_Position.y + 24))
-	{
-		m_PanelTopInBounds = true;
-		return true;
-	}
-	m_PanelTopInBounds = false;
-	for (int i = 0; i < SubElements.size();i++)
+	for (int i = 0; i < SubElements.size(); i++)
 	{
 		auto SubElem = SubElements.at(i);
 		if (SubElem->IsMouseInBounds(MousePos))
@@ -53,6 +57,16 @@ bool Panel::IsMouseInBounds(XMFLOAT2 MousePos)
 			return true;
 		}
 	}
+	if (MousePos.x > m_Position.x &&
+		MousePos.y > m_Position.y &&
+		MousePos.x < (m_Position.x + m_Bounds.x-40.1f) &&
+		MousePos.y < (m_Position.y + 24))
+	{
+		m_PanelTopInBounds = true;
+		return true;
+	}
+	m_PanelTopInBounds = false;
+	
 	return false;
 }
 void Panel::HandleMouseDown()
@@ -75,12 +89,6 @@ void Panel::ToogleVisibility()
 {
 	m_Visible = !m_Visible;
 }
-void Panel::AddElement(GUIElement* Element)
-{
-	/*Input Coordinates are relative to panel so we need to reconvert to screen space here*/
-	Element->SetPosition(XMFLOAT2(m_Position.x + Element->m_Position.x,m_Position.y+Element->m_Position.y));
-	SubElements.push_back(Element);
-}
 /*Performs typesafe downcast with dynamic_cast, please check ptr for null on return*/
 template<typename T>
 T* Panel::GetElement(String name)
@@ -97,14 +105,39 @@ T* Panel::GetElement(String name)
 void Panel::Render(DXOverlay* appinst)
 {
 	if (!m_Visible)
+	{
+		XMVECTOR Pos1 = { m_Position.x+25.0f, m_Position.y };
+		XMVECTOR Pos2 = { m_Position.x + m_Bounds.x-25.0f, m_Position.y };
+		XMVECTOR Pos3 = { m_Position.x, m_Position.y + 24.0f };
+		XMVECTOR Pos4 = { m_Position.x + m_Bounds.x, m_Position.y+ 24.0f };
+
+		appinst->DrawLine(Pos1, Pos2, Colors::Black);
+		appinst->DrawLine(Pos1, Pos3, Colors::Black);
+		appinst->DrawLine(Pos2, Pos4, Colors::Black);
+		appinst->DrawLine(Pos3, Pos4, Colors::Black);
+		appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y + 12), 1.0f, true, "%s", m_Text.c_str());
+
+		if (m_MouseIsDown && m_PanelTopInBounds)
+		{
+			POINT mousepos;
+			if (GetCursorPos(&mousepos))
+			{
+				this->SetPosition(XMFLOAT2(mousepos.x - (m_Bounds.x / 2), mousepos.y - 12.0f));
+			}
+		}
+
+		static_cast<Button*>(SubElements.at(0))->ChangeText("+");
+		SubElements.at(0)->Render(appinst);
 		return;
+	}
+	static_cast<Button*>(SubElements.at(0))->ChangeText("-");
 
 	if (m_MouseIsDown && m_PanelTopInBounds)
 	{
 		POINT mousepos;
 		if (GetCursorPos(&mousepos))
 		{
-			this->SetPosition(XMFLOAT2(mousepos.x-1.0f, mousepos.y-1.0f));
+			this->SetPosition(XMFLOAT2(mousepos.x-(m_Bounds.x/2), mousepos.y-12.0f));
 		}
 	}
 

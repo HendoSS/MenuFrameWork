@@ -50,38 +50,47 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
   calendar = new Calendar(app);
   GUIMngr = new GUIManager(app);
+  Panel* pPanel = new Panel("Test Panel", "Panel 1", XMFLOAT2(600.0f, 300.0f), XMFLOAT2(300.0f, 300.0f));
+  Panel* pPanel2 = new Panel("Test Panel 2", "Panel 2", XMFLOAT2(000.0f, 000.0f), XMFLOAT2(600.0f, 600.0f));
+  pPanel2->AddElement(
+	  new Button("Test4", "Button 4", XMFLOAT2(10.0f, 30), XMFLOAT2(50.0f, 20.0f),
+	  []()->void
+  {
+	  std::cout << "Button Pressed \n";
+  }));
 
-  GUIMngr->AddElement(
-		new Button("Test","Button 1", XMFLOAT2(150.0f, 150.f), XMFLOAT2(50.0f, 20.0f),
+
+  pPanel->AddElement(
+		new Button("Test","Button 1", XMFLOAT2(10.0f, 30), XMFLOAT2(50.0f, 20.0f),
 		[]()->void
 		{
 			std::cout << "Button Pressed \n";
 		}));
 
-  GUIMngr->AddElement(
-		new Button("Test 2","Button 2", XMFLOAT2(500.0f, 200.0f), XMFLOAT2(50.0f,20.0f),
+  pPanel->AddElement(
+		new Button("Test 2","Button 2", XMFLOAT2(100.0f, 200.0f), XMFLOAT2(50.0f,20.0f),
 		[]()->void
 		{
 			std::cout << "Button 2 Pressed \n";
 		}));
 
-  GUIMngr->AddElement(
-		new Slider<int>("Slider 1", XMFLOAT2(500.0f, 400.0f), XMFLOAT2(50.0f, 20.0f), 0, 5, Colors::Black,
+  pPanel->AddElement(
+		new Slider<int>("Slider 1", XMFLOAT2(150.0f, 250.0f), XMFLOAT2(50.0f, 20.0f), 0, 5, Colors::Black,
 		[]()->void
 		{
 			 std::cout << "Slider Released \n";
 		}));
 
-  Panel* pPanel = new Panel("Test Panel", "Panel 1", XMFLOAT2(600.0f,300.0f), XMFLOAT2(300.0f, 300.0f));
+ 
   pPanel->AddElement(
-	 new Button("Test 3", "Button 3", XMFLOAT2(50.0f,50.0f), XMFLOAT2(50.0f, 20.0f),
-	 []()->void
-	 {
-		std::cout << "Button 3 Pressed \n";
-	 }));
+	    new Button("Test 3", "Button 3", XMFLOAT2(50.0f, 50.0f), XMFLOAT2(50.0f, 20.0f),
+		[]()->void
+		{
+			std::cout << "Button 3 Pressed \n";
+		}));
 
   GUIMngr->AddElement(pPanel);
-
+  GUIMngr->AddElement(pPanel2);
 
   //GUIMngr->GetElement<Slider<int>>("Slider 1");
 

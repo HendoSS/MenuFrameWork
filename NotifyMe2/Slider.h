@@ -134,6 +134,6 @@ void Slider<T>::SetPosition(XMFLOAT2 Pos)
 	/*We have to move the slider, the second line here keeps the slider at the same amount
 	away from the new X position as it was away from the old x position*/
 	m_SliderPosition.y = Pos.y;
-	m_SliderPosition.x = Pos.x + (m_Position.x - m_SliderPosition.x);
+	m_SliderPosition.x = Pos.x - (m_Position.x - m_SliderPosition.x);
 	m_Position = Pos;
 }
