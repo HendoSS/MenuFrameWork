@@ -47,6 +47,7 @@ bool Panel::IsMouseInBounds(XMFLOAT2 MousePos)
 	this allows for the larger design choice of whether or not we want to use panels 
 	for certain elements; Due to the fact that events are handled per GUIElement and 
 	dispatched down the chain*/
+
 	for (int i = 0; i < SubElements.size(); i++)
 	{
 		auto SubElem = SubElements.at(i);
@@ -54,6 +55,7 @@ bool Panel::IsMouseInBounds(XMFLOAT2 MousePos)
 		{
 			//Save the index later for mouse event forwarding
 			m_ElementOfEventIndex = i;
+			m_MouseIsOver = true;
 			return true;
 		}
 	}
@@ -63,10 +65,12 @@ bool Panel::IsMouseInBounds(XMFLOAT2 MousePos)
 		MousePos.y < (m_Position.y + 24))
 	{
 		m_PanelTopInBounds = true;
+		m_MouseIsOver = true;
 		return true;
 	}
 	m_PanelTopInBounds = false;
 	
+	m_MouseIsOver = false;
 	return false;
 }
 void Panel::HandleMouseDown()

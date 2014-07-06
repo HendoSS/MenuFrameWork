@@ -84,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="CalendarClasses.h" />
+    <ClInclude Include="CheckBox.h" />
     <ClInclude Include="GUIFrameWork.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="NotifyMe2.h" />

@@ -51,7 +51,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   calendar = new Calendar(app);
   GUIMngr = new GUIManager(app);
   Panel* pPanel = new Panel("Test Panel", "Panel 1", XMFLOAT2(600.0f, 300.0f), XMFLOAT2(300.0f, 300.0f));
-  Panel* pPanel2 = new Panel("Test Panel 2", "Panel 2", XMFLOAT2(000.0f, 000.0f), XMFLOAT2(600.0f, 600.0f));
+  Panel* pPanel2 = new Panel("Test Panel 2", "Panel 2", XMFLOAT2(1300.0f, 300.0f), XMFLOAT2(600.0f, 600.0f));
   pPanel2->AddElement(
 	  new Button("Test4", "Button 4", XMFLOAT2(10.0f, 30), XMFLOAT2(50.0f, 20.0f),
 	  []()->void
@@ -87,6 +87,13 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		{
 			std::cout << "Button 3 Pressed \n";
 		}));
+
+  pPanel2->AddElement(
+	  new CheckBox("check", "CheckBox",true, XMFLOAT2(100.0f, 80.0f), XMFLOAT2(50.0f, 50.0f),
+	  []()->void
+	  {
+		std::cout << "checkbox Pressed \n";
+	  }));
 
   GUIMngr->AddElement(pPanel);
   GUIMngr->AddElement(pPanel2);

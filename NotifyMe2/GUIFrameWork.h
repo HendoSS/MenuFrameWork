@@ -176,3 +176,4 @@ LRESULT GUIManager::MsgProc(int nCode, WPARAM wParam, LPARAM lParam)
 #include "Button.h"
 #include "Slider.h"
 #include "Panel.h"
+#include "CheckBox.h"
