@@ -6,7 +6,7 @@ public:
 	void HandleMouseDown();
 	void HandleMouseUP();
 	void ToogleVisibility();
-	void Render(DXOverlay* appinst);
+	void Render(DrawingAbstractor* appinst);
 	void AddElement(GUIElement* Element);
 	template<typename T>
 	T* GetElement(String name);
@@ -106,7 +106,7 @@ T* Panel::GetElement(String name)
 	}
 	return nullptr;
 }
-void Panel::Render(DXOverlay* appinst)
+void Panel::Render(DrawingAbstractor* appinst)
 {
 	if (!m_Visible)
 	{
@@ -119,7 +119,7 @@ void Panel::Render(DXOverlay* appinst)
 		appinst->DrawLine(Pos1, Pos3, Colors::Black);
 		appinst->DrawLine(Pos2, Pos4, Colors::Black);
 		appinst->DrawLine(Pos3, Pos4, Colors::Black);
-		appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y + 12), 1.0f, true, "%s", m_Text.c_str());
+		appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y-3.0f), 1.0f, true, "%s", m_Text.c_str());
 
 		if (m_MouseIsDown && m_PanelTopInBounds)
 		{
@@ -149,7 +149,7 @@ void Panel::Render(DXOverlay* appinst)
 	{
 		Elem->Render(appinst);
 	}
-	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y+12), 1.0f, true, "%s", m_Text.c_str());
+	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y-3.0f), 1.0f, true, "%s", m_Text.c_str());
 	XMVECTOR Pos1 = { m_Position.x, m_Position.y };
 	XMVECTOR Pos2 = { m_Position.x +m_Bounds.x, m_Position.y };
 	XMVECTOR Pos3 = { m_Position.x, m_Position.y+m_Bounds.y };

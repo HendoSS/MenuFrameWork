@@ -48,8 +48,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   DXOverlay *app =
 		new D3DApp("Overlay", 600, 600, hInstance, "Untitled - Notepad", 4);
 
+  DrawingAbstractor* pAbstractor = new DrawingAbstractor(app);
   calendar = new Calendar(app);
-  GUIMngr = new GUIManager(app);
+  GUIMngr = new GUIManager(pAbstractor);
   Panel* pPanel = new Panel("Test Panel", "Panel 1", XMFLOAT2(600.0f, 300.0f), XMFLOAT2(300.0f, 300.0f));
   Panel* pPanel2 = new Panel("Test Panel 2", "Panel 2", XMFLOAT2(1300.0f, 300.0f), XMFLOAT2(600.0f, 600.0f));
   pPanel2->AddElement(

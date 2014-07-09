@@ -15,7 +15,7 @@ public:
 	modification of templated member (because we won't know how to modify it as the type is unknown*/
 	Slider(String Text, XMFLOAT2 position, XMFLOAT2 Size,T MinVal,T MaxVal, XMVECTOR Color,CallbackFunc callback);
 	bool IsMouseInBounds(XMFLOAT2 MousePos);
-	void Render(DXOverlay* appinst);
+	void Render(DrawingAbstractor* appinst);
 	void HandleMouseDown();
 	void HandleMouseUP();
 	T GetValue();
@@ -64,7 +64,7 @@ bool Slider<T>::IsMouseInBounds(XMFLOAT2 MousePos)
 	return false;
 }
 template<typename T>
-void Slider<T>::Render(DXOverlay* appinst)
+void Slider<T>::Render(DrawingAbstractor* appinst)
 {
 	if (m_MouseIsDown)
 	{
@@ -90,7 +90,7 @@ void Slider<T>::Render(DXOverlay* appinst)
 		identifier = "%f";
 
 	//we print the min value, with -2 on the x just for formatting and then we draw the main slider bar
-	appinst->DrawString(XMFLOAT2(m_Position.x-5,m_Position.y), 1.0f, true, identifier.c_str(), m_Min);
+	appinst->DrawString(XMFLOAT2(m_Position.x-20,m_Position.y-m_Bounds.y+6.0f), 1.0f, true, identifier.c_str(), m_Min);
 
 	XMVECTOR Pos1 = { m_Position.x, m_Position.y - (m_Bounds.y / 2) };
 	XMVECTOR Pos2 = { m_Position.x + m_Bounds.x, m_Position.y - (m_Bounds.y / 2) };
@@ -109,8 +109,8 @@ void Slider<T>::Render(DXOverlay* appinst)
 	appinst->DrawLine(sPos1, sPos2, m_Color);
 
 	//Draw Max Value, again +2 cuz of formatting
-	appinst->DrawString(XMFLOAT2(m_Position.x + m_Bounds.x+5, m_Position.y), 1.0f, true, identifier.c_str(), m_Max);
-	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y), 1.0f, true, identifier.c_str(), m_Value);
+	appinst->DrawString(XMFLOAT2(m_Position.x + m_Bounds.x + 5, m_Position.y - m_Bounds.y + 6.0f), 1.0f, true, identifier.c_str(), m_Max);
+	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2)-9.0f, m_Position.y - m_Bounds.y + 6.0f), 1.0f, true, identifier.c_str(), m_Value);
 }
 template<typename T>
 void Slider<T>::HandleMouseDown()

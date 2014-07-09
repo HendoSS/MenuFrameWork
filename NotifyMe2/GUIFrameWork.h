@@ -4,6 +4,31 @@ strait to the GUIManager w/o a panel they are relative to screen/game window !!!
 //^^^^^ READ THAT !!!!!!!!!
 class GUIManager;
 #include <chrono>
+
+class DrawingAbstractor
+{
+public:
+	DrawingAbstractor(DXOverlay* pOverlay)
+	{
+		m_Overlay = pOverlay;
+	}
+	void DrawString(XMFLOAT2 position, float scale, bool center, const char* Format, ...)
+	{
+		char Buffer[1024] = { '\0' };
+		va_list va_alist;
+		va_start(va_alist, Format);
+		vsprintf_s(Buffer, Format, va_alist);
+		va_end(va_alist);
+
+		m_Overlay->DrawString(position, 1.0f, false, "%s", Buffer);
+	}
+	void DrawLine(FXMVECTOR pos1, FXMVECTOR pos2, FXMVECTOR color)
+	{
+		m_Overlay->DrawLine(pos1, pos2, color);
+	}
+private:
+	DXOverlay* m_Overlay;
+};
 namespace
 {
 	GUIManager* GUIInst = 0;
@@ -17,7 +42,7 @@ public:
 	XMFLOAT2 m_Bounds;
 	bool m_MouseIsOver;
 	String m_Name;
-	virtual void Render(DXOverlay* appinst) = 0;
+	virtual void Render(DrawingAbstractor* appinst) = 0;
 	virtual bool IsMouseInBounds(XMFLOAT2 MousePos) = 0;
 	virtual void HandleMouseDown()=0;
 	virtual void HandleMouseUP() = 0;
@@ -31,7 +56,7 @@ class GUIManager
 public:
 	typedef std::chrono::high_resolution_clock Clock;
 	typedef std::chrono::milliseconds milliseconds;
-	GUIManager(DXOverlay* appinstance);
+	GUIManager(DrawingAbstractor* appinstance);
 	~GUIManager();
 	template<typename T> 
 	T* GetElement(int index);
@@ -41,7 +66,7 @@ public:
 	void DrawElements();
 	void UpdateMouse();
 	XMFLOAT2 m_MousePosition;
-	DXOverlay* appinstance;
+	DrawingAbstractor* appinstance;
 	virtual LRESULT MsgProc(int nCode, WPARAM wParam, LPARAM lParam);
 private:
 	/*The clock stuff prevents events from being sent in the wrong order it prevents
@@ -63,7 +88,7 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 	// before CreateWindow returns, and thus before mhMainWnd is valid.
 	return GUIInst->MsgProc(nCode, wParam, lParam);
 }
-GUIManager::GUIManager(DXOverlay* app) :appinstance(app)
+GUIManager::GUIManager(DrawingAbstractor* app) :appinstance(app)
 { 
 	GUIInst = this;
 	m_MouseHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, NULL, 0);

@@ -4,7 +4,7 @@ public:
 	typedef std::function<void()> CallbackFunc;
 	CheckBox(String Text, String Name,bool Value, XMFLOAT2 position, XMFLOAT2 size, CallbackFunc callback);
 	bool IsMouseInBounds(XMFLOAT2 MousePos);
-	void Render(DXOverlay* appinst);
+	void Render(DrawingAbstractor* appinst);
 	void HandleMouseDown();
 	void HandleMouseUP();
 	void SetPosition(XMFLOAT2 Pos);
@@ -37,7 +37,7 @@ bool CheckBox::IsMouseInBounds(XMFLOAT2 MousePos)
 	m_MouseIsOver = false;
 	return false;
 }
-void CheckBox::Render(DXOverlay* appinst)
+void CheckBox::Render(DrawingAbstractor* appinst)
 {
 	XMVECTOR Pos1 = { m_Position.x, m_Position.y };
 	XMVECTOR Pos2 = { m_Position.x + m_Bounds.x, m_Position.y };

@@ -4,7 +4,7 @@ public:
 	typedef std::function<void()> CallbackFunc;
 	Button(String Text,String Name, XMFLOAT2 position, XMFLOAT2 Size, CallbackFunc callback);
 	bool IsMouseInBounds(XMFLOAT2 MousePos);
-	void Render(DXOverlay* appinst);
+	void Render(DrawingAbstractor* appinst);
 	void ChangeText(String txt);
 	void HandleMouseDown();
 	void HandleMouseUP();
@@ -40,7 +40,7 @@ bool Button::IsMouseInBounds(XMFLOAT2 MousePos)
 	m_MouseIsOver = false;
 	return false;
 }
-void Button::Render(DXOverlay* appinst)
+void Button::Render(DrawingAbstractor* appinst)
 {
 	if (m_MouseIsOver)
 	{
@@ -53,7 +53,7 @@ void Button::Render(DXOverlay* appinst)
 		appinst->DrawLine(Pos2, Pos4, Colors::Black);
 		appinst->DrawLine(Pos3, Pos4, Colors::Black);
 	}
-	appinst->DrawString(XMFLOAT2(m_Position.x + (m_Bounds.x / 2), m_Position.y+(m_Bounds.y/2)), 1.0f, true, "%s", m_Text.c_str());
+	appinst->DrawString(XMFLOAT2(m_Position.x /*+ (m_Bounds.x / 2)*/, m_Position.y/*+(m_Bounds.y/2)*/-3.0f), 1.0f, true, "%s", m_Text.c_str());
 }
 void Button::ChangeText(String txt)
 {
