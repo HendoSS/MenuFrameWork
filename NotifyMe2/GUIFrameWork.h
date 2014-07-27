@@ -29,10 +29,6 @@ public:
 private:
 	DXOverlay* m_Overlay;
 };
-namespace
-{
-	GUIManager* GUIInst = 0;
-}
 
 class GUIElement
 {
@@ -67,7 +63,6 @@ public:
 	void UpdateMouse();
 	XMFLOAT2 m_MousePosition;
 	DrawingAbstractor* appinstance;
-	virtual LRESULT MsgProc(int nCode, WPARAM wParam, LPARAM lParam);
 private:
 	/*The clock stuff prevents events from being sent in the wrong order it prevents
 	the series: Mouseclick then Mouseover then SendMouseEvent, it now only allows
@@ -75,30 +70,22 @@ private:
 	Clock::time_point m_StartTime;
 	Clock::time_point m_EndTime;
 	milliseconds m_ElapsedTime;
-	HHOOK m_MouseHook;
 	std::vector<GUIElement*> GUIElements;
 	bool m_MouseisDown;
 	bool m_SendMouseDown;
 	bool m_SendMouseUp;
+	SHORT m_OldMouseState;
 };
-/*Function for our MouseHook*/
-LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
-{
-	// Forward hwnd on because we can get messages (e.g., WM_CREATE)
-	// before CreateWindow returns, and thus before mhMainWnd is valid.
-	return GUIInst->MsgProc(nCode, wParam, lParam);
-}
+
 GUIManager::GUIManager(DrawingAbstractor* app) :appinstance(app)
 { 
-	GUIInst = this;
-	m_MouseHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, NULL, 0);
 	m_MouseisDown = false;
 	m_SendMouseDown = true;
 	m_StartTime = Clock::now();
 };
 GUIManager::~GUIManager()
 {
-	UnhookWindowsHookEx(m_MouseHook);
+	
 }
 /*Returns Element index so you can reference it later*/
 int GUIManager::AddElement(GUIElement* Element)
@@ -133,6 +120,33 @@ void GUIManager::DrawElements()
 }
 void GUIManager::UpdateMouse()
 {
+	SHORT m_MouseState = GetAsyncKeyState(VK_LBUTTON);
+	if ((m_MouseState & 0x8000) && !(m_OldMouseState & 0x8000))
+	{
+		m_StartTime = Clock::now();
+		m_MouseisDown = true;
+		m_SendMouseDown = true;
+		m_SendMouseUp = false;
+		printf("left mouse down\n");
+	}else if ((m_OldMouseState & 0x8000) && !(m_MouseState & 0x8000)){
+		m_MouseisDown = false;
+		m_SendMouseDown = false;
+		m_SendMouseUp = true;
+		printf("left mouse up\n");
+	}
+	m_OldMouseState = m_MouseState;
+
+	m_EndTime = Clock::now();
+	m_ElapsedTime = std::chrono::duration_cast<milliseconds>(m_EndTime - m_StartTime);
+	if (m_ElapsedTime.count() >= 100 && (m_SendMouseDown || m_MouseisDown))
+	{
+		//only ignore event if elapsed time is over 100ms and send button flags
+		//are set
+		std::cout << "Mouse Event Ignored \n";
+		m_SendMouseDown = false;
+		m_MouseisDown = false;
+	}
+
 	//End time is when we compare the time the mouse has been down
 	m_EndTime = Clock::now();
 	m_ElapsedTime=std::chrono::duration_cast<milliseconds>(m_EndTime-m_StartTime);
@@ -140,9 +154,8 @@ void GUIManager::UpdateMouse()
 	{
 		//only ignore event if elapsed time is over 100ms and send button flags
 		//are set
-		std::cout << "Mouse Event Ignored \n";
+		//std::cout << "Mouse Event Ignored \n";
 		m_SendMouseDown = false;
-		m_MouseisDown = false;
 	}
 	POINT mouse;
 	if (GetCursorPos(&mouse))
@@ -172,29 +185,7 @@ void GUIManager::UpdateMouse()
 			m_SendMouseUp = false;
 		}
 	}
-	appinstance->DrawString(XMFLOAT2(50.0f, 50.0f), 1.0f, false, "%f %f", m_MousePosition.x, m_MousePosition.y);
-}
-LRESULT GUIManager::MsgProc(int nCode, WPARAM wParam, LPARAM lParam)
-{
-	if (nCode >= 0) {
-		if (wParam == WM_LBUTTONDOWN)
-		{
-			//Set start time to time the button was pressed
-			m_StartTime = Clock::now();
-			m_MouseisDown = true;
-			m_SendMouseDown = true;
-			m_SendMouseUp = false;
-			printf("left mouse down\n");
-		}
-		if (wParam == WM_LBUTTONUP) 
-		{
-			m_MouseisDown = false;
-			m_SendMouseDown = false;
-			m_SendMouseUp = true; 
-			printf("left mouse up\n");
-		}
-	}
-	return CallNextHookEx(0, nCode, wParam, lParam);
+	appinstance->DrawString(XMFLOAT2(50.0f, 50.0f), 1.0f, false, "%f %f",m_MousePosition.x, m_MousePosition.y);
 }
 
 
