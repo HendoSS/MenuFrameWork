@@ -5,6 +5,8 @@ strait to the GUIManager w/o a panel they are relative to screen/game window !!!
 class GUIManager;
 #include <chrono>
 
+//This class it to make it very easy to override the drawing functiosn for different
+//Engines, simple Define in the function how each function is handles.
 class DrawingAbstractor
 {
 public:
