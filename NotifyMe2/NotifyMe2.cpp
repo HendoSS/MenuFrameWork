@@ -60,11 +60,20 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	  std::cout << "Button Pressed \n";
   }));
 
+  pPanel->AddElement(
+	  new Label("Label", "Test Label", XMFLOAT2(10.0f, 100.0f), XMFLOAT2(50.0f, 20.0f)));
+
 
   pPanel->AddElement(
 		new Button("Test","Button 1", XMFLOAT2(10.0f, 30), XMFLOAT2(50.0f, 20.0f),
-		[]()->void
+		[&]()->void
 		{
+			Label* pLabel = pPanel->GetElement<Label>("Test Label");
+			if (pLabel != nullptr)
+			{
+				pLabel->ChangeText("Worx");
+				std::cout << pLabel->m_Name;
+			}
 			std::cout << "Button Pressed \n";
 		}));
 

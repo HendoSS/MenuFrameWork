@@ -104,6 +104,7 @@ T* GUIManager::GetElement(String name)
 {
 	for (auto Elem : GUIElements)
 	{
+		std::cout << Elem->m_Name << "\n";
 		if (Elem->m_Name == name)
 		{
 			return dynamic_cast<T*>(Elem); 
@@ -193,3 +194,4 @@ void GUIManager::UpdateMouse()
 #include "Slider.h"
 #include "Panel.h"
 #include "CheckBox.h"
+#include "Label.h"

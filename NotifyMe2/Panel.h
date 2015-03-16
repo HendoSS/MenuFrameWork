@@ -97,11 +97,11 @@ void Panel::ToogleVisibility()
 template<typename T>
 T* Panel::GetElement(String name)
 {
-	for (auto Element : SubElements)
+	for (auto Elem : SubElements)
 	{
-		if (Element->m_Name == name)
+		if (Elem->m_Name == name)
 		{
-			return dynamic_cast<T*>(Element);
+			return dynamic_cast<T*>(Elem);
 		}
 	}
 	return nullptr;

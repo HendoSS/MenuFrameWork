@@ -59,6 +59,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -87,6 +88,7 @@
     <ClInclude Include="CheckBox.h" />
     <ClInclude Include="GUIFrameWork.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="NotifyMe2.h" />
     <ClInclude Include="OverlayClasses.h" />
     <ClInclude Include="Panel.h" />
