@@ -1,7 +1,3 @@
 NotifyMe
 ========
-
-Notification Overlay to Manage Date, Time, And Events. Popups are to be similar to how skype works, only this will manage
-dates, events, and simple reminders. I forget simple stuff alot so this will be an easy way to remind myself.
-
-This project has been abandoned, the GUI classes however are almost complete but are fully functional.
+This project has been abandoned, the GUI classes however are almost complete but are fully functional. Drawing is miniamalist and centered around a simple line and text style, as this is easier to incorporate into the projects it was designed for, that being internal game hacks where the drawing functions are usually limited to only line and text.
